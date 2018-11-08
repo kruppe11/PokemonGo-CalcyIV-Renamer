@@ -16,19 +16,16 @@ locations:
     appraisal_box: [45, 1664, 1032, 1872]
 
 waits:
-    next: 1.0
-    rename: 1.0
+    next: 0.75
+    rename: 0.75
     rename_ok: 1
     pokemon_menu_button: 1
 
 blacklist:
-    - MewThree
+    - Mewtwoss
+
 
 actions:
-    - conditions:
-        success: false
-      actions:
-        rename: ".FAILED"
     - actions:
         rename-calcy: # Rename normally
 

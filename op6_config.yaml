@@ -1,8 +1,8 @@
 locations:
-    rename: [539, 936]
-    next: [980, 280]
-    keyboard_ok: [933, 1085]
-    rename_ok: [540, 1050]
+    rename: [591, 1090]
+    next: [1020, 600]
+    keyboard_ok: [933, 1365]
+    rename_ok: [540, 1250]
     close_calcy_dialog: [966, 1092]
     edit_box: [90, 1090] # only used with --touch-paste
     paste: [483, 1092] # only used with --touch-paste
@@ -16,10 +16,11 @@ locations:
     appraisal_box: [45, 1664, 1032, 1872]
 
 waits:
-    next: 1.0
-    rename: 1.0
+    next: 0.5
+    rename: 0.5
     rename_ok: 1
     pokemon_menu_button: 1
+    appraise_button: 1
 
 blacklist:
     - MewThree
@@ -29,9 +30,13 @@ actions:
         success: false
       actions:
         rename: ".FAILED"
+    - conditions:
+        iv__in: [0, 100]
+      actions:
+        favorite:
+        rename-calcy:
     - actions:
         rename-calcy: # Rename normally
-
 
 
 iv_regexes:
