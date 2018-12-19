@@ -68,6 +68,7 @@ class PokemonGo(object):
     async def get_devices(self):
         code, stdout, stderr = await self.run(["adb", "devices"])
         devices = []
+
         for line in stdout.decode('utf-8').splitlines()[1:-1]:
             device_id, name = line.split('\t')
             devices.append(device_id)
@@ -94,7 +95,7 @@ class PokemonGo(object):
             raise LogcatNotRunningError()
 
         line = await self.logcat_task.stdout.readline()
-        line = line.decode('utf-8').rstrip()
+        line = line.decode('utf-8', errors='ignore').rstrip()
         #while line.split()[2].decode('utf-8') != self.calcy_pid:
         #    line = await self.logcat_task.stdout.readline()
         #logger.debug("Received logcat line: %s", line)
@@ -118,7 +119,7 @@ class PokemonGo(object):
             elif '--user' in key:
                 cmd = cmd + " --user {}".format(value)
             else:
-                cmd = cmd + " -e {} {}".format(key, value)
+                cmd = cmd + " -e {} '{}'".format(key, value)
         logger.info("Sending intent: " + cmd)
         await self.run(["adb", "-s", await self.get_device(), "shell", cmd])
 

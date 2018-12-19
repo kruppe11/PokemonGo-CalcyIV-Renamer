@@ -5,10 +5,13 @@ import re
 import argparse
 import logging
 import operator
+import os.path
 from sys import platform
+
 
 def in_func(a, b):
     return a in b
+
 
 ops = {
     'lt': operator.lt,
@@ -28,20 +31,37 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(messag
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-RE_CALCY_IV = re.compile(r"^./MainService\(\s*\d+\): Received values: Id: \d+ \((?P<name>.+)\), Nr: (?P<id>\d+), CP: (?P<cp>\-{0,1}\d+), Max HP: (?P<max_hp>\d+), Dust cost: (?P<dust_cost>\d+), Level: (?P<level>\-{0,1}[0-9\.]+), FastMove (?P<fast_move>.+), SpecialMove (?P<special_move>.+), Gender (?P<gender>\d), Level-up (true|false):$")
+RE_CALCY_IV = re.compile(r"^./MainService\(\s*\d+\): Received values: Id: \d+ \((?P<name>.+)\), Nr: (?P<id>\d+), CP: (?P<cp>\-{0,1}\d+), Max HP: (?P<max_hp>\d+), Dust cost: (?P<dust_cost>\d+), Level: (?P<level>\-{0,1}[0-9\.]+), FastMove (?P<fast_move>.+), SpecialMove (?P<special_move>.+),Gender (?P<gender>\d), catchYear (?P<catch_year>.+), Level-up (true|false):$")
 RE_RED_BAR = re.compile(r"^.+\(\s*\d+\): Screenshot #\d has red error box at the top of the screen$")
 RE_SUCCESS = re.compile(r"^.+\(\s*\d+\): calculateScanOutputData finished after \d+ms$")
 RE_SCAN_INVALID = re.compile(r"^.+\(\s*\d+\): Scan invalid$")
-
 
 CALCY_SUCCESS = 0
 CALCY_RED_BAR = 1
 CALCY_SCAN_INVALID = 2
 
+class Loader(yaml.SafeLoader):
+
+    def __init__(self, stream):
+
+        self._root = os.path.split(stream.name)[0]
+
+        super(Loader, self).__init__(stream)
+
+    def include(self, node):
+
+        filename = os.path.join(self._root, self.construct_scalar(node))
+
+        with open(filename, 'r') as f:
+            return yaml.load(f, Loader)
+
+Loader.add_constructor('!include', Loader.include)
+
+
 class Main:
     def __init__(self, args):
         with open(args.config, "r") as f:
-            self.config = yaml.load(f)
+            self.config = yaml.load(f, Loader)
         self.args = args
         self.use_fallback_screenshots = False
         self.iv_regexes = [re.compile(r) for r in self.config["iv_regexes"]]
@@ -83,7 +103,7 @@ class Main:
                     continue
                 num_errors = 0
 
-            values["success"] = True if state == CALCY_SUCCESS and blacklist == False else False
+            values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
             values["blacklist"] = blacklist
             values["appraised"] = False
             actions = await self.get_actions(values)
@@ -91,7 +111,7 @@ class Main:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
                 await self.p.send_intent("tesmath.calcy.ACTION_ANALYZE_SCREEN", "tesmath.calcy/.IntentReceiver", [["silentMode", True]])
-                for i in range(0, 3):
+                for i in range(0, 4):  # we can do it four times before beggining to screencap
                     await self.tap("continue_appraisal")
                 while await self.check_appraising():
                     await self.tap("continue_appraisal")
@@ -102,24 +122,20 @@ class Main:
 
             if "rename" in actions or "rename-calcy" in actions:
                 if values["success"] is False:
-                    await self.tap('close_calcy_dialog') # it gets in the way
+                    await self.tap('close_calcy_dialog')  # it gets in the way
                 await self.tap('rename')
-                if "rename-calcy" in actions:
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key(279) # Paste into rename
-                elif "rename" in actions:
-                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"]]])
 
-                    if args.touch_paste:
-                        await self.swipe('edit_box', 600)
-                        await self.tap('paste')
-                    else:
-                        await self.p.key(279)  # Paste into rename
+                if actions.get("rename", "{calcy}") != "{calcy}": # Don't bother setting clipboard if we don't need to change it
+                    await self.p.send_intent("clipper.set", extra_values=[["text", actions["rename"].format(**values)]])
 
-                await self.tap('keyboard_ok')
+                if args.touch_paste:
+                    await self.swipe('edit_box', 600)
+                    await self.tap('paste')
+                else:
+                    await self.p.key('KEYCODE_PASTE')  # Paste into rename
+                # await self.tap('keyboard_ok')  # Instead of yet another tap, use keyevents for reliability
+                await self.p.key('KEYCODE_TAB')
+                await self.p.key('KEYCODE_ENTER')
                 await self.tap('rename_ok')
             if "favorite" in actions:
                 if not await self.check_favorite():
@@ -143,9 +159,9 @@ class Main:
                         if key in d:
                             d[key] = float(d[key])
                     d["iv"] = None
-                return d
+                return clipboard, d
 
-        raise Exception("Clipboard regex did not match, got "+clipboard)
+        raise Exception("Clipboard regex did not match, got " + clipboard)
 
     async def check_appraising(self):
         """
@@ -211,13 +227,11 @@ class Main:
         return color_count > 500
 
     async def get_actions(self, values):
-        clipboard_values = None
         valid_conditions = [
             "name", "iv", "iv_min", "iv_max", "success", "blacklist",
             "appraised", "id", "cp", "max_hp", "dust_cost", "level",
-            "fast_move", "special_move", "gender"
+            "fast_move", "special_move", "gender", "catch_year"
         ]
-        clipboard_required = ["iv", "iv_min", "iv_max"]
         for ruleset in self.config["actions"]:
             conditions = ruleset.get("conditions", {})
             # Check if we need to read the clipboard
@@ -226,9 +240,6 @@ class Main:
                 operator = None
                 if "__" in key:
                     key, operator = key.split("__")
-                if key in clipboard_required and clipboard_values is None:
-                    clipboard_values = await self.get_data_from_clipboard()
-                    values = {**values, **clipboard_values}
 
                 if isinstance(values[key], str):
                     if values[key].isnumeric():
@@ -276,6 +287,9 @@ class Main:
                     state = CALCY_RED_BAR
                     return state, values
                 else:
+                    clipboard, clipboard_values = await self.get_data_from_clipboard()
+                    values = {**values, **clipboard_values}
+                    values["calcy"] = clipboard
                     return state, values
 
             match = RE_RED_BAR.match(line)
@@ -292,6 +306,7 @@ class Main:
                 else:
                     logger.debug("RE_SCAN_INVALID matched, raising CalcyIVError")
                     return CALCY_SCAN_INVALID, values
+
 
 if __name__ == '__main__':
     if platform == 'win32':
