@@ -103,10 +103,18 @@ class Main:
                     continue
                 num_errors = 0
 
-            values["success"] = True if state == CALCY_SUCCESS and blacklist is False else False
+            if not await self.check_favorite():
+                values['favd'] = False
+            else:
+                values['favd'] = True
+
+            values["success"] = True if state == CALCY_SUCCESS and blacklist is False and values['favd'] == False else False
             values["blacklist"] = blacklist
             values["appraised"] = False
             actions = await self.get_actions(values)
+            print(values)
+
+
             if "appraise" in actions:
                 await self.tap("pokemon_menu_button")
                 await self.tap("appraise_button")
@@ -145,6 +153,7 @@ class Main:
 
     async def get_data_from_clipboard(self):
         clipboard = await self.p.get_clipboard()
+        #logger.debug(f'clipboard val: {clipboard}')
 
         for iv_regex in self.iv_regexes:
             match = iv_regex.match(clipboard)
@@ -275,11 +284,12 @@ class Main:
         values = {}
         while True:
             line = await self.p.read_logcat()
-            logger.debug("logcat line received: %s", line)
+            #logger.debug("logcat line received: %s", line)
             match = RE_CALCY_IV.match(line)
             if match:
                 logger.debug("RE_CALCY_IV matched")
                 values = match.groupdict()
+                logger.debug(f'values: {values}')
                 state = CALCY_SUCCESS
                 if values['cp'] == '-1' or values['level'] == '-1.0':
                     pass
@@ -290,6 +300,7 @@ class Main:
                     clipboard, clipboard_values = await self.get_data_from_clipboard()
                     values = {**values, **clipboard_values}
                     values["calcy"] = clipboard
+                    logger.debug(f'\ncheckPoke values: {values}')
                     return state, values
 
             match = RE_RED_BAR.match(line)

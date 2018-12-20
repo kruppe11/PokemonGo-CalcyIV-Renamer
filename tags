@@ -1953,6 +1953,7 @@ ListCommand	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/commands/li
 ListCommand	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/commands/list.py	/^class ListCommand(Command):$/;"	c
 Literal	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/pyparsing.py	/^class Literal(Token):$/;"	c
 Literal	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/pyparsing.py	/^class Literal(Token):$/;"	c
+Loader	ivcheck.py	/^class Loader(yaml.SafeLoader):$/;"	c
 Loader	venv/lib/python3.7/site-packages/yaml/loader.py	/^class Loader(Reader, Scanner, Parser, Composer, Constructor, Resolver):$/;"	c
 Loader	venv/lib64/python3.7/site-packages/yaml/loader.py	/^class Loader(Reader, Scanner, Parser, Composer, Constructor, Resolver):$/;"	c
 LocalFSAdapter	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/download.py	/^class LocalFSAdapter(BaseAdapter):$/;"	c
@@ -4898,6 +4899,7 @@ __iadd__	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/pypa
 __ilshift__	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/pyparsing.py	/^    def __ilshift__(self, other):$/;"	m	class:Forward
 __ilshift__	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/pyparsing.py	/^    def __ilshift__(self, other):$/;"	m	class:Forward
 __init__	ivcheck.py	/^    def __init__(self, args):$/;"	m	class:Main
+__init__	ivcheck.py	/^    def __init__(self, stream):$/;"	m	class:Loader
 __init__	pokemonlib.py	/^    def __init__(self):$/;"	m	class:PokemonGo
 __init__	venv/lib/python3.7/site-packages/PIL/BdfFontFile.py	/^    def __init__(self, fp):$/;"	m	class:BdfFontFile
 __init__	venv/lib/python3.7/site-packages/PIL/ContainerIO.py	/^    def __init__(self, file, offset, length):$/;"	m	class:ContainerIO
@@ -14042,6 +14044,7 @@ in_venv	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/distlib
 in_venv	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/distlib/util.py	/^def in_venv():$/;"	f
 inc_convert	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/distlib/util.py	/^    def inc_convert(self, value):$/;"	m	class:Configurator
 inc_convert	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/distlib/util.py	/^    def inc_convert(self, value):$/;"	m	class:Configurator
+include	ivcheck.py	/^    def include(self, node):$/;"	m	class:Loader
 increase_indent	venv/lib/python3.7/site-packages/yaml/emitter.py	/^    def increase_indent(self, flow=False, indentless=False):$/;"	m	class:Emitter
 increase_indent	venv/lib64/python3.7/site-packages/yaml/emitter.py	/^    def increase_indent(self, flow=False, indentless=False):$/;"	m	class:Emitter
 increment	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/distlib/util.py	/^    def increment(self, incr):$/;"	m	class:Progress
@@ -16488,6 +16491,7 @@ profileToProfile	venv/lib/python3.7/site-packages/PIL/ImageCms.py	/^def profileT
 profileToProfile	venv/lib64/python3.7/site-packages/PIL/ImageCms.py	/^def profileToProfile($/;"	f
 progress	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/progress/__init__.py	/^    def progress(self):$/;"	m	class:Progress
 progress	venv/lib64/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/progress/__init__.py	/^    def progress(self):$/;"	m	class:Progress
+project_opened	.ropeproject/config.py	/^def project_opened(project):$/;"	f
 project_urls	venv/lib/python3.7/site-packages/asyncio-3.4.3.dist-info/metadata.json	/^{"version": "3.4.3", "name": "asyncio", "metadata_version": "2.0", "summary": "reference impleme/;"	o	object:extensions.python.details
 project_urls	venv/lib64/python3.7/site-packages/asyncio-3.4.3.dist-info/metadata.json	/^{"version": "3.4.3", "name": "asyncio", "metadata_version": "2.0", "summary": "reference impleme/;"	o	object:extensions.python.details
 props	venv/lib/python3.7/site-packages/pip-9.0.1-py3.7.egg/pip/_vendor/appdirs.py	/^    props = ("user_data_dir", "site_data_dir",$/;"	v
@@ -17852,6 +17856,7 @@ set_pixel	venv/lib64/python3.7/site-packages/PIL/PyAccess.py	/^    def set_pixel
 set_pixel	venv/lib64/python3.7/site-packages/PIL/PyAccess.py	/^    def set_pixel(self, x, y, color):$/;"	m	class:_PyAccessI16_N
 set_pixel	venv/lib64/python3.7/site-packages/PIL/PyAccess.py	/^    def set_pixel(self, x, y, color):$/;"	m	class:_PyAccessI32_N
 set_pixel	venv/lib64/python3.7/site-packages/PIL/PyAccess.py	/^    def set_pixel(self, x, y, color):$/;"	m	class:_PyAccessI32_Swap
+set_prefs	.ropeproject/config.py	/^def set_prefs(prefs):$/;"	f
 set_python_instance_state	venv/lib/python3.7/site-packages/yaml/constructor.py	/^    def set_python_instance_state(self, instance, state):$/;"	m	class:Constructor
 set_python_instance_state	venv/lib64/python3.7/site-packages/yaml/constructor.py	/^    def set_python_instance_state(self, instance, state):$/;"	m	class:Constructor
 set_result	venv/lib/python3.7/site-packages/asyncio/futures.py	/^    def set_result(self, result):$/;"	m	class:Future

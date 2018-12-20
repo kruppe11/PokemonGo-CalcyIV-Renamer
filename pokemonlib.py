@@ -59,10 +59,10 @@ class PokemonGo(object):
         return self.device_id
 
     async def run(self, args):
-        logger.debug("Running %s", args)
+        #logger.debug("Running %s", args)
         p = subprocess.Popen([str(arg) for arg in args], stdout=subprocess.PIPE)
         stdout, stderr = p.communicate()
-        logger.debug("Return code %d", p.returncode)
+        #logger.debug("Return code %d", p.returncode)
         return (p.returncode, stdout, stderr)
 
     async def get_devices(self):
@@ -120,7 +120,7 @@ class PokemonGo(object):
                 cmd = cmd + " --user {}".format(value)
             else:
                 cmd = cmd + " -e {} '{}'".format(key, value)
-        logger.info("Sending intent: " + cmd)
+        #logger.info("Sending intent: " + cmd)
         await self.run(["adb", "-s", await self.get_device(), "shell", cmd])
 
     async def tap(self, x, y):

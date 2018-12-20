@@ -1,0 +1,65 @@
+# op5 set up appraising
+locations:
+    rename: [539, 936]
+    next: [980, 280]
+    keyboard_ok: [933, 1085]
+    rename_ok: [540, 1050]
+    close_calcy_dialog: [966, 1092]
+    edit_box: [90, 1090] # only used with --touch-paste
+    paste: [483, 1092] # only used with --touch-paste
+    favorite_button: [980, 156]
+    favorite_button_box: [960, 142, 1001, 180]
+    pokemon_menu_button: [950, 1800]
+    appraise_button: [783, 1380]
+    continue_appraisal: [566, 1770]
+    calcy_appraisal_save_button: [918, 873]
+    dismiss_calcy: [555, 1296]
+    appraisal_box: [89, 1683, 1030, 1862]
+
+waits:
+    next: 0.75
+    rename: 0.75
+    rename_ok: 1
+    pokemon_menu_button: 0.5
+    appraise_button: 0.5
+    calcy_appraisal_save_button: 0.5
+
+blacklist:
+    - Mewtwo
+    - Lugia
+    - Ho-oh
+    - Zapdos
+    - Articuno
+    - Moltres
+    - Mew
+    - Bagon
+    - Trapinch
+
+
+actions:
+    - conditions:
+        success: false
+    - conditions:
+        iv_max__ge: 91
+        appraised: false
+      actions:
+        appraise:
+    - conditions:
+        iv_max__ge: 91
+        appraised: true
+      actions:
+        rename-calcy:
+    - conditions:
+        level__ge: 30
+      actions:
+        rename: 'level'
+    - conditions:
+        iv_max__lt: 91
+      actions:
+        rename: "bad"
+
+
+
+iv_regexes:
+    - ^(?P<iv_min>\d+)\-(?P<iv_max>\d+).*$
+    - ^(?P<iv>\d+).*$
