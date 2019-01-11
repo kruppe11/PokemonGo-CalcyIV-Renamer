@@ -12,28 +12,21 @@ locations:
     pokemon_menu_button: [950, 1800]
     appraise_button: [783, 1380]
     continue_appraisal: [566, 1770]
-    calcy_appraisal_save_button: [918, 873]
+    calcy_appraisal_save_button: [878, 1012]
     dismiss_calcy: [555, 1296]
     appraisal_box: [89, 1683, 1030, 1862]
 
 waits:
-    next: 0.75
-    rename: 0.75
-    rename_ok: 1
-    pokemon_menu_button: 0.5
+    next: 1.0
+    rename: 1.0
+    rename_ok: 1.0
+    pokemon_menu_button: 0.7
     appraise_button: 0.5
     calcy_appraisal_save_button: 0.5
+    dismiss_calcy: 0.5
 
 blacklist:
-    - Mewtwo
-    - Lugia
-    - Ho-oh
-    - Zapdos
-    - Articuno
-    - Moltres
-    - Mew
-    - Bagon
-    - Trapinch
+    - Mewthree
 
 
 actions:
@@ -50,7 +43,7 @@ actions:
       actions:
         rename-calcy:
     - conditions:
-        level__ge: 30
+        level__ge: 32
       actions:
         rename: 'level'
     - conditions:

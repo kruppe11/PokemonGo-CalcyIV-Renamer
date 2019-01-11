@@ -90,6 +90,11 @@ class Main:
         while True:
             blacklist = False
             state, values = await self.check_pokemon()
+            if not await self.check_favorite():
+                values['favd'] = False
+            else:
+                values['favd'] = True
+
 
             if values["name"] in self.config["blacklist"]:
                 blacklist = True
@@ -103,10 +108,6 @@ class Main:
                     continue
                 num_errors = 0
 
-            if not await self.check_favorite():
-                values['favd'] = False
-            else:
-                values['favd'] = True
 
             values["success"] = True if state == CALCY_SUCCESS and blacklist is False and values['favd'] == False else False
             values["blacklist"] = blacklist
